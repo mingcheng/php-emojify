@@ -1,0 +1,11 @@
+{
+    "name": "mingcheng/emojify",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lyu Ming",
+            "email": "mingcheng@outlook.com"
+        }
+    ]
+}

@@ -2,7 +2,9 @@
 /**
  * PHP Emojify - The PHP Port of Emojify
  *
- * https://github.com/mrowa44/emojify
+ * @author mingcheng
+ *
+ * This script was inspired by https://github.com/mrowa44/emojify
  */
 
 require_once __DIR__ . "/vendor/autoload.php";
@@ -12,9 +14,12 @@ class Emojify
     protected $encode = array();
     protected $decode = array();
 
+    /**
+     * Contruct from json file
+     */
     public function __construct()
     {
-        if (empty($self->encode) || empty($this->decode)) {
+        if (empty($this->encode) || empty($this->decode)) {
             $this->emojis = json_decode(file_get_contents(__DIR__ . "/data/emoji-huge.json"));
             foreach ($this->emojis as $emoji) {
                 $name = $emoji->name;
@@ -25,31 +30,37 @@ class Emojify
         }
     }
 
-    public function encode(String $text)
+    public function getEmojiByName($name)
+    {
+        return $this->encode[$name] ?: null;
+    }
+
+    public function getNameByEmoji($emoji)
+    {
+        return $this->decode[$emoji] ?: null;
+    }
+
+    /**
+     * Encode emoji
+     */
+    public function encode($text, $htmlEntities = false)
     {
         $that = $this;
-        $func = function ($matches) use ($that) {
-            if (isset($matches[0])) {
-                return $that->getEmojiByName($matches[0]);
+        $func = function ($matches) use ($that, $htmlEntities) {
+            if (isset($matches[0]) && !empty($emoji = $that->getEmojiByName($matches[0]))) {
+                return $htmlEntities ? mb_convert_encoding($emoji, 'HTML-ENTITIES', 'UTF-8') : $emoji;
             } else {
-                return "";
+                return $matches[0];
             }
         };
 
         return preg_replace_callback("/:[\w|_|-]+:/", $func, $text);
     }
 
-    public function getEmojiByName($name)
-    {
-        return $this->encode[$name];
-    }
-
-    public function getNameByEmoji($emoji)
-    {
-        return $this->decode[$emoji];
-    }
-
-    public function decode(String $emojis)
+    /**
+     * Decode emoji
+     */
+    public function decode($emojis)
     {
         $that = $this;
         $func = function ($matches) use ($that) {
