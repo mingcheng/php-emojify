@@ -4,8 +4,8 @@
  *
  * @package Emojify
  * @author 明城
- * @version 1.0.0
- * @link https://www.gracecode.com/emojify.html
+ * @version 0.0.1
+ * @link https://github.com/mingcheng/emojify.php
  */
 
 require_once __DIR__ . "/Emojify.inc.php";
